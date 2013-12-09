@@ -1,0 +1,12 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    rack (1.5.2)
+    thrift (0.9.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rack
+  thrift (~> 0.9.1)
