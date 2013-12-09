@@ -8,6 +8,8 @@ require_relative 'gen-rb/chat_a_p_i'
 class ChatHandler
 
   def addNewUser(username)
+  	puts username+" has joined the chat"
+  	return username
   end
 
   def sendMessage(message, username, token)
