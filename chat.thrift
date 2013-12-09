@@ -11,5 +11,5 @@ exception UserAlreadyRegisteredException {
 
 service ChatAPI {
   string addNewUser(1: string username) throws (1: UserAlreadyRegisteredException ex),
-  string sendMessage(1: ChatMessage message, 2: string username, 3: string token)
+  void sendMessage(1: ChatMessage message, 2: string username, 3: string token)
 }

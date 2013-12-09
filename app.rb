@@ -1,5 +1,6 @@
 require 'thrift'
 require_relative 'dao/user_dao'
+require_relative 'dao/message_dao'
 
 $:.push('gen-rb')
 
@@ -18,6 +19,8 @@ class ChatHandler
   end
 
   def sendMessage(message, username, token)
+  	msg = MessageDAO.instance.add_new_message(message.message,username)
+  	#puts username + " << " + message.message
   end
 
 end
@@ -30,7 +33,7 @@ handler = ChatHandler.new()
 processor = ChatAPI::Processor.new(handler)
 transport = Thrift::ServerSocket.new(8080)
 transportFactory = Thrift::BufferedTransportFactory.new()
-server = Thrift::ThreadedServer.new(processor, transport, transportFactory)
+server = Thrift::SimpleServer.new(processor, transport, transportFactory)
 puts "Starting the Chat server..."
 server.serve()
 puts "done"
