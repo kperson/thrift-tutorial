@@ -9,6 +9,9 @@ transport = Thrift::BufferedTransport.new(Thrift::Socket.new('127.0.0.1', 8080))
 protocol = Thrift::BinaryProtocol.new(transport)
 client = ChatAPI::Client.new(protocol)
 transport.open()
-
-puts client.addNewUser("Brian")
-
+username = "Susie"
+begin 
+  puts username + " added with token " + client.addNewUser(username)
+rescue UserAlreadyRegisteredException => e 
+  puts username + " already exists"
+end
