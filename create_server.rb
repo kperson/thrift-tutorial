@@ -1,13 +1,15 @@
-# Thrift provides mutiple communication endpoints
-#  - Here we will expose our service via a TCP socket
-#  - Web-service will run as a single thread, on port 8080
 module CreateServer
-  def CreateServer.create_server(handler)
+  def CreateServer.create_server(handler, port)
     processor = ChatAPI::Processor.new(handler)
-    transport = Thrift::ServerSocket.new(8080)
-    transportFactory = Thrift::BufferedTransportFactory.new()
-    server = Thrift::SimpleServer.new(processor, transport, transportFactory)
-    puts "Chat Server Started..."
+    transport_factory = Thrift::BufferedTransportFactory.new()
+    server = Thrift::ThinHTTPServer.new(processor, { :port => port })
     server.serve()
+    puts "Chat Server Started..."
   end
+
+  def CreateServer.create_production_server(handler)
+    processor = ChatAPI::Processor.new(handler)
+    protocol = Thrift::BinaryProtocolFactory.new
+    Thrift::ThinHTTPServer::RackApplication.for("/", processor, protocol)
+  end  
 end

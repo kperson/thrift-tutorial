@@ -10,8 +10,7 @@ class ChatHandler
 
   def addNewUser(username)
     if !UserDAO.instance.find_user_by_username(username)
-      user = UserDAO.instance.add_new_user(username)
-      return user[:token]
+      return UserDAO.instance.add_new_user(username)['token']
     else
       raise UserAlreadyRegisteredException.new(username + " already exists")
     end
@@ -24,5 +23,6 @@ class ChatHandler
 
 end
 
-
-CreateServer.create_server(ChatHandler.new())
+if __FILE__ == $0
+  CreateServer.create_server(ChatHandler.new(), 8080)
+end
