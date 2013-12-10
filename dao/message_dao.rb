@@ -10,45 +10,47 @@ class MessageDAO
 
   @@message_file = 'storage/messages.json'
 
-  def add_new_message(message, image_array, recipient)
-    user = UserDAO.instance.find_user_by_username(recipient)
-  	my_messages = messages
-  	message_key = RandomUtil.random_string(50)
-  	msg = { 'recipient' => recipient, 'message' => message }
-    if !image_array.empty?
-      msg['image'] = save_image(image_array)
-    end
-  	my_messages[message_key] = msg
+  def add_new_message(message, recipient, sender_token)
+    recipient_user = UserDAO.instance.find_user_by_username(recipient)
+    sending_user = UserDAO.instance.find_user_by_token(sender_token)
+  	my_messages = messages()
+    puts message
+    puts recipient
+    puts sender_token
+    puts my_messages
+  	id = RandomUtil.random_string(50)
+  	msg = { 'id' => id, 'recipient' => recipient_user['username'], 'sender' => sending_user['username'], 'message' => message }
+  	my_messages << msg
   	FileHelper.instance.write_file_at(@@message_file, JSON.generate(my_messages))
-    return message_key
+    return id
   end
 
-  def fetch_image(message_key)
-    msg = messages()[message_key]
-    chat_message = ChatMessage.new()
-    chat_message.message = msg['message']
-    chat_message.image = msg['image'] ? FileHelper.instance.local_file_at(msg['image']) : []
-    return chat_message
+  def find_message(message_id, token)
+    recipient_user = UserDAO.instance.find_user_by_token(token)
+    return messages().select{ |x| x['id'] == message_id && x['recipient'] == recipient_user['username'] }.first
   end
 
-  def save_image(image_array)
-    local_path = "storage/images/" + RandomUtil.random_string(50) + ".jpg"
-    abs_path = FileHelper.instance.local_file_path(local_path)
-    FileHelper.instance.write_file_at(abs_path, image_array)
-    local_path
+  def find_messages_by_token(friend_user_name, token)
+    me = UserDAO.instance.find_user_by_token(token)
+    return messages().select do |x| 
+      (x['recipient'] == friend_user_name && x['sender'] == me['username']) || 
+      (x['sender'] == friend_user_name && x['recipient'] == me['username']) 
+    end
   end
 
-  def delete_message(message_key)
-    my_messages = messages()
-    msg = my_messages[message_key]
-    my_messages.delete(message_key)
-    if msg['image']
-      FileHelper.instance.delete_local_file_at(msg['image'])
+  def find_chat_messages_by_token(friend_user_name, token)
+    list = find_messages_by_token(friend_user_name, token)
+    return list.collect do |x|
+      chat_message = ChatMessage.new()
+      chat_message.content = x['message']
+      chat_message.recipient = x['recipient']
+      chat_message.sender = x['sender']
+      chat_message
     end
   end
 
   def messages()
-    File.exist?(@@message_file) ? JSON.parse(FileHelper.instance.local_file_at(@@message_file)) : { }
+    return File.exist?(@@message_file) ? JSON.parse(FileHelper.instance.local_file_at(@@message_file)) : [ ]
   end
 
   def send_push_notification(msg_key, recipient, token)

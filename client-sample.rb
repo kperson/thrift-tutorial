@@ -5,14 +5,15 @@ $:.push('gen-rb')
 
 require_relative 'gen-rb/chat_a_p_i'
 
-transport = Thrift::BufferedTransport.new(Thrift::HTTPClientTransport.new("http://192.168.1.103:8080"))
+transport = Thrift::BufferedTransport.new(Thrift::HTTPClientTransport.new("http://127.0.0.1:8080"))
 protocol = Thrift::BinaryProtocol.new(transport)
 client = ChatAPI::Client.new(protocol)
 transport.open()
 username = "Susie"
 username1 = "Samwise"
+token = ''
 begin 
-  puts username + " added with token " + client.addNewUser(username)
+  token = client.addNewUser(username)
 rescue UserAlreadyRegisteredException => e 
   puts username + " already exists"
 end
@@ -22,9 +23,7 @@ rescue UserAlreadyRegisteredException => e
   puts username1 + " already exists"
 end
 
-message = "Hey Silly Susie"
-chatMessage = ChatMessage.new()
-chatMessage.message = message
-chatMessage.image = []
-puts username + " @ " + username1 + " >> " + message
-client.sendMessage(chatMessage,username1,"token")
+#message = "Hey Silly Susie"
+#puts username + " @ " + username1 + " >> " + message
+#client.sendMessage(message, username1, token)
+puts client.getConversation(username1, token).first.content

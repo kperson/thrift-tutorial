@@ -1,15 +1,13 @@
 namespace java com.chat.api
 
 struct ChatMessage {
-  1: string message,
-  2: list<byte>image
+  1: string content,
+  2: string sender,
+  3: string recipient
 }
 
-exception UserAlreadyRegisteredException {
- 1: string message
-} 
-
-service ChatAPI {
-  string addNewUser(1: string username) throws (1: UserAlreadyRegisteredException ex),
-  void sendMessage(1: ChatMessage message, 2: string username, 3: string token)
+ service ChatAPI {
+  string addNewUser(1: string username),
+  string sendMessage(1: string message, 2: string username, 3: string token),
+  list<ChatMessage> getConversation(1: string username, 2: string token)
 }

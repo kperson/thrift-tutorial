@@ -9,16 +9,20 @@ require_relative 'gen-rb/chat_a_p_i'
 class ChatHandler
 
   def addNewUser(username)
-    if !UserDAO.instance.find_user_by_username(username)
+    user = UserDAO.instance.find_user_by_username(username)
+    if !user
       return UserDAO.instance.add_new_user(username)['token']
     else
-      raise UserAlreadyRegisteredException.new(username + " already exists")
+      return user['token']
     end
   end
 
-  def sendMessage(chat_message, recipient, token)
-  	msg_key = MessageDAO.instance.add_new_message(chat_message.message, chat_message.image, recipient)
-    MessageDAO.instance.send_push_notification(msg_key, recipient, token)
+  def sendMessage(message, recipient, token)
+  	return MessageDAO.instance.add_new_message(message, recipient, token)
+  end
+
+  def getConversation(friend_username, token)
+    return MessageDAO.instance.find_chat_messages_by_token(friend_username, token)
   end
 
 end
