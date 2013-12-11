@@ -25,6 +25,14 @@ class ChatHandler
     return MessageDAO.instance.find_chat_messages_by_token(friend_username, token)
   end
 
+  def registerAndroidToken(push_token, token)
+    UserDAO.instance.add_android_token(push_token, token)
+  end
+
+  def registeriOSToken(push_token, token)
+    UserDAO.instance.add_ios_token(push_token, token)
+  end
+
 end
 
 if __FILE__ == $0

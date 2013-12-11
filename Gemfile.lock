@@ -4,10 +4,17 @@ GEM
     daemons (1.0.10)
     eventmachine (1.0.3)
     gem_plugin (0.2.3)
+    httparty (0.12.0)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     json (1.8.1)
     mongrel (1.2.0.pre2)
       daemons (~> 1.0.10)
       gem_plugin (~> 0.2.3)
+    multi_xml (0.5.5)
+    pushmeup (0.1.2)
+      httparty
+      json
     rack (1.5.2)
     thin (1.6.1)
       daemons (>= 1.0.9)
@@ -21,6 +28,7 @@ PLATFORMS
 DEPENDENCIES
   json
   mongrel
+  pushmeup (~> 0.1.2)
   rack
   thin (~> 1.6.1)
   thrift (~> 0.9.1)

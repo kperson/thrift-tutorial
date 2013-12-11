@@ -1,5 +1,6 @@
 require 'singleton'
 require "json"
+require "pushmeup"
 require_relative '../lib/file_helper'
 require_relative 'user_dao'
 require_relative '../gen-rb/chat_a_p_i'
@@ -30,6 +31,11 @@ class MessageDAO
     return messages().select{ |x| x['id'] == message_id && x['recipient'] == recipient_user['username'] }.first
   end
 
+  def find_message_by_message_id(message_id)
+    recipient_user = UserDAO.instance.find_user_by_token(token)
+    return messages().select{ |x| x['id'] == message_id }.first
+  end
+
   def find_messages_by_token(friend_user_name, token)
     me = UserDAO.instance.find_user_by_token(token)
     return messages().select do |x| 
@@ -53,7 +59,22 @@ class MessageDAO
     return File.exist?(@@message_file) ? JSON.parse(FileHelper.instance.local_file_at(@@message_file)) : [ ]
   end
 
-  def send_push_notification(msg_key, recipient, token)
+  def send_push_notification(msg_key, recipient, token)    
+    configure_push()
+    rec = UserDAO.instance.find_user_by_username(recipient)
+    
+    if rec['android_push_notification']
+      message = find_message_by_message_id(msg_key)
+      payload = {:message => message['message'], :id => msg_key }
+      note = GCM::Notification.new(rec['android_push_notification'], data)
+      GCM.send_notifications([note])
+    end
+  end
+
+  def configure_push()
+    GCM.host = 'https://android.googleapis.com/gcm/send'
+    GCM.format = :json
+    GCM.key = "954579491697"
   end
 
 end

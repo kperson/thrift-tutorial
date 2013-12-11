@@ -17,6 +17,22 @@ class UserDAO
     return user_list().select{ |u| u['token'] == token }.first
   end  
 
+  def add_android_token(android_push_token, token)
+    user = find_user_by_token(token)
+    my_users = user_list()
+    index = my_users.index(user)
+    my_users[index]['android_push_token'] = android_push_token
+    FileHelper.instance.write_file_at(@@storage_file, JSON.generate(users))
+  end
+
+  def add_ios_token(ios_push_token, token)
+    user = find_user_by_token(token)
+    my_users = user_list()
+    index = my_users.index(user)
+    my_users[index]['ios_push_token'] = ios_push_token
+    FileHelper.instance.write_file_at(@@storage_file, JSON.generate(users))
+  end
+
   def add_new_user(username)
     token =  RandomUtil.random_string(50)
     user = { 'username' => username, 'token' => token }
