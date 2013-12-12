@@ -16,7 +16,7 @@ kelton = "Kelton"
 brian_token = client.addNewUser(brian)
 kelton_token = client.addNewUser(kelton)
 
-message = "iOS CDC"
+message = "New MEssage"
 client.sendMessage(message, kelton, brian_token)
 
 #client.sendMessage(message, brian, kelton_token)

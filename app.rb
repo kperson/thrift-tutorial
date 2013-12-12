@@ -9,6 +9,7 @@ require_relative 'gen-rb/chat_a_p_i'
 class ChatHandler
 
   def addNewUser(username)
+    puts "ADD NEW USER: " + username
     user = UserDAO.instance.find_user_by_username(username)
     if !user
       return UserDAO.instance.add_new_user(username)['token']
@@ -18,18 +19,22 @@ class ChatHandler
   end
 
   def sendMessage(message, recipient, token)
+    puts "SENDING MESSAGE: " + message + " TO " + recipient
   	return MessageDAO.instance.add_new_message(message, recipient, token)
   end
 
   def getConversation(friend_username, token)
+    puts "FETCHING CONVERSATION WITH: " + friend_username
     return MessageDAO.instance.find_chat_messages_by_token(friend_username, token)
   end
 
   def registerAndroidToken(push_token, token)
+    puts "ANDROID PUSH TOKEN REGISTERED: " + push_token
     UserDAO.instance.add_android_token(push_token, token)
   end
 
   def registeriOSToken(push_token, token)
+    puts "IOS PUSH TOKEN REGISTERED: " + push_token
     UserDAO.instance.add_ios_token(push_token, token)
   end
 
