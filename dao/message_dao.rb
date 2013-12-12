@@ -64,11 +64,12 @@ class MessageDAO
     message = MessageDAO.instance.find_message_by_message_id(msg_key)
     payload = {:message => message['message'], :id => msg_key, :sender => message['sender'] }
     if rec['android_push_token']
-      puts "PUSHING: " + rec['android_push_token']
+      puts "ANDROID_PUSHING: " + rec['android_push_token']
       gcm = GCM.new("AIzaSyC2PvKKhv1pzpH02Zt3liit4ZyjK2jWFao")
       puts gcm.send_notification([rec['android_push_token']], { data: payload, collapse_key: msg_key })
     end
     if rec['ios_push_token']
+      puts "IOS_PUSHING: " + rec['ios_push_token']
       APNS.send_notification(rec['ios_push_token'], :alert => message['message'], :badge => 0, :other => payload)
     end
   end
