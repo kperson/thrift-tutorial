@@ -26,6 +26,7 @@ class ChatHandler
   end
 
   def registerAndroidToken(push_token, token)
+    puts "ANDROID!!!"
     UserDAO.instance.add_android_token(push_token, token)
   end
 

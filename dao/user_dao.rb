@@ -18,11 +18,16 @@ class UserDAO
   end  
 
   def add_android_token(android_push_token, token)
+    puts "SAMPLE PUSH: " + android_push_token
+    MessageDAO.instance.sample_push(android_push_token)
     user = find_user_by_token(token)
     my_users = user_list()
     index = my_users.index(user)
     my_users[index]['android_push_token'] = android_push_token
-    FileHelper.instance.write_file_at(@@storage_file, JSON.generate(users))
+    puts index
+    puts user
+    puts android_push_token
+    FileHelper.instance.write_file_at(@@storage_file, JSON.generate(my_users))
   end
 
   def add_ios_token(ios_push_token, token)
@@ -30,7 +35,7 @@ class UserDAO
     my_users = user_list()
     index = my_users.index(user)
     my_users[index]['ios_push_token'] = ios_push_token
-    FileHelper.instance.write_file_at(@@storage_file, JSON.generate(users))
+    FileHelper.instance.write_file_at(@@storage_file, JSON.generate(my_users))
   end
 
   def add_new_user(username)
