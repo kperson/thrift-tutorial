@@ -1,4 +1,4 @@
-/gen-rb
 /gen-java
 /gen-cocoa
 /storage
+.elasticbeanstalk/
