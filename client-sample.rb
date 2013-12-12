@@ -5,8 +5,8 @@ $:.push('gen-rb')
 
 require_relative 'gen-rb/chat_a_p_i'
 
-#transport = Thrift::BufferedTransport.new(Thrift::HTTPClientTransport.new("http://127.0.0.1:8080"))
-transport = Thrift::BufferedTransport.new(Thrift::HTTPClientTransport.new("http://server-env-kyr2mdefeg.elasticbeanstalk.com"))
+transport = Thrift::BufferedTransport.new(Thrift::HTTPClientTransport.new("http://127.0.0.1:8080"))
+#transport = Thrift::BufferedTransport.new(Thrift::HTTPClientTransport.new("http://server-env-kyr2mdefeg.elasticbeanstalk.com"))
 protocol = Thrift::BinaryProtocol.new(transport)
 client = ChatAPI::Client.new(protocol)
 
@@ -16,6 +16,7 @@ kelton = "Kelton"
 brian_token = client.addNewUser(brian)
 kelton_token = client.addNewUser(kelton)
 
-message = "hi kelton2"
+message = "iOS CDC"
 client.sendMessage(message, kelton, brian_token)
+
 #client.sendMessage(message, brian, kelton_token)

@@ -18,8 +18,6 @@ class UserDAO
   end  
 
   def add_android_token(android_push_token, token)
-    puts "SAMPLE PUSH: " + android_push_token
-    MessageDAO.instance.sample_push(android_push_token)
     user = find_user_by_token(token)
     my_users = user_list()
     index = my_users.index(user)
